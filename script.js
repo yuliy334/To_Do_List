@@ -13,20 +13,23 @@ class Task_manager {
         this.print_tasks();
     }
     print_tasks(){
-        this.tasks.forEach(t => {
-            this.print_new_task(t);
+        this.tasks.forEach((task,id) => {
+            this.print_new_task(task,id);
         });
     }
-    print_new_task(task) {
+    print_new_task(task,id) {
         const tasks_body = document.getElementById("tasks_body");
         const li = document.createElement("li");
         li.innerHTML = `${task.description}`;
+        li.classList.add('my_task');
+        li.dataset.index = id;
+
 
         tasks_body.appendChild(li);
     }
     localStorage_save() {
         localStorage.setItem("tasks", JSON.stringify(this.tasks));
-        this.print_new_task(this.tasks.at(-1));
+        this.print_new_task(this.tasks.at(-1), this.tasks.length - 1);
     }
     load_From_localStorage() {
         const tasksJ = localStorage.getItem("tasks");
@@ -57,7 +60,6 @@ document.addEventListener("DOMContentLoaded", () => {
         task_manage.tasks.push(new_task);
         console.log(task_manage.tasks);
         task_manage.localStorage_save();
-        //task_manage.print_new_task(new_task);
 
 
         task_input.value = '';
@@ -65,6 +67,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     });
+
+    tasks_body.addEventListener("click", (e) => {
+        console.log("clicked", e.target);
+        if (e.target.classList.contains('my_task')) {
+            console.log("Task clicked:", e.target.dataset.index);
+            
+        }
+    });     
 
 
 
