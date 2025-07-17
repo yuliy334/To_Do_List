@@ -18,13 +18,16 @@ class TaskManager {
         this.load_From_localStorage();
         this.print_tasks();
     }
+    // printing
     print_tasks() {
         const tasks_body = document.getElementById("tasks_body");
         tasks_body.innerHTML = "";
         this.tasks.forEach((task, id) => {
             this.print_new_task(task, id);
+            //console.log(this.tasks.at(id).sub_tasks);
             this.tasks.at(id).sub_tasks.forEach((sub_task, sub_id) => {
-                if (this.tasks.at(id).sub_tasks != null) {
+                if (this.tasks.at(id).sub_tasks.length !== 0) {
+                    //console.log("hallo");
                     this.print_new_sub_task(sub_task, sub_id, id);
                 }
 
@@ -35,7 +38,9 @@ class TaskManager {
         const tasks_body = document.getElementById("tasks_body");
         const li = document.createElement("li");
         const ul = document.createElement("ul");
-        li.innerHTML = `<span>${task.description}</span>`;
+        const span = document.createElement('span');
+        span.textContent = task.description;
+        li.appendChild(span);
         li.classList.add('my_task');
         if (task.completed == true) {
             li.classList.add("completed_task");
@@ -48,10 +53,12 @@ class TaskManager {
         tasks_body.appendChild(li);
     }
     print_new_sub_task(sub_task, sub_id, id) {
-        const li = document.querySelector(`#tasks_body li[data-index="${id}"]`);
+        const li = document.querySelector(`#tasks_body > li[data-index="${id}"]`);
+        //console.log(li);
         const inner_ul = li.querySelector('ul');
+        //console.log(inner_ul);
         const sub_li = document.createElement('li');
-        sub_li.innerHTML = `<div>${sub_task.description}</div>`;
+        sub_li.innerHTML = `${sub_task.description}`;
         sub_li.classList.add('my_sub_task');
         if (sub_task.completed == true) {
             li.classList.add("completed_task");
@@ -61,6 +68,9 @@ class TaskManager {
 
 
     }
+    // end printing
+
+    //tasks comands
     localStorage_save() {
         localStorage.setItem("tasks", JSON.stringify(this.tasks));
     }
@@ -88,8 +98,18 @@ class TaskManager {
         this.localStorage_save();
         this.print_tasks();
     }
+    //end tasks comands
+
+
+    //sub tasks commands
     add_sub_task(text, id) {
         this.tasks.at(id).sub_tasks.push(new SubTask(text));
+        this.localStorage_save();
+        this.print_tasks();
+
+    }
+    delete_sub_task(id, sub_id) {
+        this.tasks.at(id).sub_tasks.splice(sub_id, 1);
         this.localStorage_save();
         this.print_tasks();
 
@@ -103,6 +123,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const task_input = document.getElementById("task_input");
     const tasks_body = document.getElementById("tasks_body");
     const settings_form = document.getElementById("setting_form");
+    const sub_settings_form = document.getElementById("setting_sub_form");
+
 
 
 
@@ -122,13 +144,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
     tasks_body.addEventListener("click", (e) => {
         const hiden_id = document.getElementById("hiden_id");
+        const hiden_sub_id = document.getElementById("hiden_sub_id");
 
 
-        if (e.target.classList.contains('my_task')) {
-            console.log("Task clicked:", e.target.dataset.index);
-            open_settings_form();
-            hiden_id.textContent = e.target.dataset.index;
+        if (e.target.closest('.my_sub_task')) {
+            const li_father = e.target.closest('.my_task');
+            hiden_id.textContent = li_father.dataset.index;
+            console.log("sub sub", e.target.dataset.index, hiden_id.textContent);
+            hiden_sub_id.textContent = e.target.dataset.index;
+            open_sub_settings_form();
+
+            return;
+
         }
+        if (e.target.closest('.my_task')) {
+            const li_task = e.target.closest('.my_task');
+            console.log("Task clicked:", li_task.dataset.index);
+            hiden_id.textContent = li_task.dataset.index;
+            open_settings_form();
+
+
+        }
+
+
     });
 
     settings_form.addEventListener("click", (e) => {
@@ -146,15 +184,31 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         if (e.target.id == "add_sub_task_btn") {
             const sub_task = document.getElementById("sub_task_input").value;
-            console.log("add sub task");
+            console.log("add sub task", hiden_id);
+
             task_manage.add_sub_task(sub_task, hiden_id);
             console.log("sub: ", task_manage.tasks);
             close_settings_form();
         }
-        if(e.target.id=="close_setting_btn"){
+        if (e.target.id == "close_setting_btn") {
             close_settings_form();
         }
     });
+
+    sub_settings_form.addEventListener('click', (e) => {
+        const hiden_id = parseInt(document.getElementById("hiden_id").textContent);
+        const hiden_sub_id = parseInt(document.getElementById("hiden_sub_id").textContent);
+        if (e.target.id == "close_sub_setting_btn") {
+            close_sub_settings_form();
+        }
+        if (e.target.id === "delete_sub_task_btn") {
+            console.log("delete sub ", hiden_id, hiden_sub_id);
+            task_manage.delete_sub_task(hiden_id, hiden_sub_id);
+            close_sub_settings_form();
+
+        }
+    })
+
 
 
 
@@ -174,3 +228,18 @@ function close_settings_form() {
     settings_form.style.display = "none";
     black_background.style.display = "none";
 }
+
+function open_sub_settings_form() {
+    const black_background = document.getElementById("black_background");
+    const sub_settings_form = document.getElementById("setting_sub_form");
+    sub_settings_form.style.display = "flex";
+    black_background.style.display = "block";
+}
+function close_sub_settings_form() {
+    const black_background = document.getElementById("black_background");
+    const sub_settings_form = document.getElementById("setting_sub_form");
+    sub_settings_form.style.display = "none";
+    black_background.style.display = "none";
+}
+
+
