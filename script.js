@@ -61,7 +61,7 @@ class TaskManager {
         sub_li.innerHTML = `${sub_task.description}`;
         sub_li.classList.add('my_sub_task');
         if (sub_task.completed == true) {
-            li.classList.add("completed_task");
+            sub_li.classList.add("completed_task");
         }
         sub_li.dataset.index = sub_id;
         inner_ul.appendChild(sub_li);
@@ -112,6 +112,20 @@ class TaskManager {
         this.tasks.at(id).sub_tasks.splice(sub_id, 1);
         this.localStorage_save();
         this.print_tasks();
+
+    }
+    complete_sub_task(id, sub_id) {
+        this.tasks.at(id).sub_tasks.at(sub_id).completed = true;
+        const if_all_complited = this.tasks.at(id).sub_tasks.every(sub => sub.completed == true);
+        console.log(this.tasks.at(id),if_all_complited);
+        if (if_all_complited) {
+            console.log('workkks');
+            this.complete_task(id);
+        }
+        else {
+            this.localStorage_save();
+            this.print_tasks();
+        }
 
     }
 }
@@ -207,6 +221,11 @@ document.addEventListener("DOMContentLoaded", () => {
             close_sub_settings_form();
 
         }
+        if (e.target.id == "complete_sub_task_btn") {
+            task_manage.complete_sub_task(hiden_id,hiden_sub_id);
+            close_sub_settings_form();
+        }
+
     })
 
 
