@@ -26,6 +26,9 @@ class Task_manager {
         const li = document.createElement("li");
         li.innerHTML = `${task.description}`;
         li.classList.add('my_task');
+        if (task.completed == true) {
+            li.classList.add("completed_task");
+        }
         li.dataset.index = id;
 
 
@@ -52,6 +55,11 @@ class Task_manager {
         this.localStorage_save();
         this.print_tasks();
 
+    }
+    complete_task(id) {
+        this.tasks.at(id).completed = true;
+        this.localStorage_save();
+        this.print_tasks();
     }
 }
 
@@ -101,6 +109,12 @@ document.addEventListener("DOMContentLoaded", () => {
             settings_form.style.display = "none";
             black_background.style.display = "none";
 
+        }
+        if (e.target.id == "complete_task_btn") {
+            console.log("complete ", hiden_id);
+            task_manage.complete_task(hiden_id);
+            settings_form.style.display = "none";
+            black_background.style.display = "none";
         }
     });
 

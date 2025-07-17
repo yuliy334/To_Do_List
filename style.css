@@ -27,7 +27,13 @@ body {
 }
 
 
+.completed_task {
+    text-decoration: line-through;
+    color: gray;
+}
 
+
+/* delete/edit/complete_task_btn */
 #setting_form {
     position: fixed;
     top: 50%;
