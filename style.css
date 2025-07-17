@@ -35,13 +35,16 @@ body {
     z-index: 100;
     transform: translate(-50%, -50%);
     background-color: #4CAF50;
-    display: flex;
+    display: none;
     gap: 10px;
     justify-content: center;
     margin-top: 30;
     padding: 20px;
+    border-radius: 10px;
+
 }
 #black_background {
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -49,4 +52,7 @@ body {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 50;
+}
+#hiden_id {
+    display: none;
 }
