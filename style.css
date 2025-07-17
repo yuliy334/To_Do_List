@@ -89,7 +89,7 @@ body {
     transform: translate(-50%, -50%);
     background-color: #4CAF50;
     display: none;
-    gap: 10px;
+    gap: 40px;
     justify-content: center;
     margin-top: 30;
     padding: 20px;
@@ -105,7 +105,7 @@ body {
     z-index: 100;
     transform: translate(-50%, -50%);
     background-color: #4CAF50;
-    gap: 10px;
+    gap: 40px;
     justify-content: center;
     margin-top: 30;
     padding: 20px;
@@ -115,6 +115,26 @@ body {
 #hiden_id {
     display: none;
 }
+
 #hiden_sub_id {
+    display: none;
+}
+
+
+#edit_form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 100;
+    transform: translate(-50%, -50%);
+    background-color: #f2e312;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 30;
+    padding: 20px;
+    border-radius: 10px;
+    display: none;
+}
+#hiden_if_sub{
     display: none;
 }

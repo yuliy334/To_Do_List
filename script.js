@@ -58,7 +58,12 @@ class TaskManager {
         const inner_ul = li.querySelector('ul');
         //console.log(inner_ul);
         const sub_li = document.createElement('li');
-        sub_li.innerHTML = `${sub_task.description}`;
+
+        const span = document.createElement('span');
+        span.textContent = sub_task.description;
+        sub_li.appendChild(span);
+
+        //sub_li.innerHTML = `${sub_task.description}`;
         sub_li.classList.add('my_sub_task');
         if (sub_task.completed == true) {
             sub_li.classList.add("completed_task");
@@ -98,6 +103,11 @@ class TaskManager {
         this.localStorage_save();
         this.print_tasks();
     }
+    edit_task(text, id) {
+        this.tasks.at(id).description = text;
+        this.localStorage_save();
+        this.print_tasks();
+    }
     //end tasks comands
 
 
@@ -117,7 +127,7 @@ class TaskManager {
     complete_sub_task(id, sub_id) {
         this.tasks.at(id).sub_tasks.at(sub_id).completed = true;
         const if_all_complited = this.tasks.at(id).sub_tasks.every(sub => sub.completed == true);
-        console.log(this.tasks.at(id),if_all_complited);
+        console.log(this.tasks.at(id), if_all_complited);
         if (if_all_complited) {
             console.log('workkks');
             this.complete_task(id);
@@ -127,6 +137,11 @@ class TaskManager {
             this.print_tasks();
         }
 
+    }
+    edit_sub_tasks(text, id, sub_id) {
+        this.tasks.at(id).sub_tasks.at(sub_id).description = text;
+        this.localStorage_save();
+        this.print_tasks();
     }
 }
 
@@ -138,6 +153,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const tasks_body = document.getElementById("tasks_body");
     const settings_form = document.getElementById("setting_form");
     const sub_settings_form = document.getElementById("setting_sub_form");
+    const edit_form = document.getElementById("edit_form");
+
+
 
 
 
@@ -163,9 +181,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (e.target.closest('.my_sub_task')) {
             const li_father = e.target.closest('.my_task');
+            const li = e.target.closest('.my_sub_task');
             hiden_id.textContent = li_father.dataset.index;
-            console.log("sub sub", e.target.dataset.index, hiden_id.textContent);
-            hiden_sub_id.textContent = e.target.dataset.index;
+            console.log("sub sub", li.dataset.index, hiden_id.textContent);
+            hiden_sub_id.textContent = li.dataset.index;
             open_sub_settings_form();
 
             return;
@@ -207,6 +226,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.target.id == "close_setting_btn") {
             close_settings_form();
         }
+        if (e.target.id == "edit_task_btn") {
+            const if_sub = document.getElementById('hiden_if_sub');
+            if_sub.textContent = 'false';
+            close_settings_form();
+            open_edit();
+        }
+
     });
 
     sub_settings_form.addEventListener('click', (e) => {
@@ -222,13 +248,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
         }
         if (e.target.id == "complete_sub_task_btn") {
-            task_manage.complete_sub_task(hiden_id,hiden_sub_id);
+            task_manage.complete_sub_task(hiden_id, hiden_sub_id);
             close_sub_settings_form();
+        }
+        if (e.target.id == "edit_sub_task_btn") {
+            const if_sub = document.getElementById('hiden_if_sub');
+            if_sub.textContent = 'true';
+            close_sub_settings_form();
+            open_edit();
         }
 
     })
 
 
+    edit_form.addEventListener('click', (e) => {
+        const if_sub = document.getElementById('hiden_if_sub');
+        const hiden_id = parseInt(document.getElementById("hiden_id").textContent);
+        const hiden_sub_id = parseInt(document.getElementById("hiden_sub_id").textContent);
+        const text = document.getElementById('edit_input');
+        if (e.target.id == "confirm_edit_btn") {
+            if (if_sub.textContent == 'false') {
+                console.log(text.value)
+                task_manage.edit_task(text.value, hiden_id);
+                close_edit();
+            }
+            else if (if_sub.textContent == 'true') {
+                task_manage.edit_sub_tasks(text.value, hiden_id, hiden_sub_id);
+                close_edit();
+            }
+        }
+        if (e.target.id == "close_edit_btn") {
+            close_edit();
+        }
+
+
+    });
 
 
 });
@@ -261,4 +315,16 @@ function close_sub_settings_form() {
     black_background.style.display = "none";
 }
 
+function open_edit() {
+    const black_background = document.getElementById("black_background");
+    const edit_form = document.getElementById("edit_form");
+    edit_form.style.display = "flex";
+    black_background.style.display = "block";
+}
+function close_edit() {
+    const black_background = document.getElementById("black_background");
+    const edit_form = document.getElementById("edit_form");
+    edit_form.style.display = "none";
+    black_background.style.display = "none";
+}
 
