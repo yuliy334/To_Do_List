@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,26 +8,37 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
+
 <body>
     <div class="title">
         <h1>To Do List</h1>
     </div>
-    <form id = "input_task_form">
+    <form id="input_task_form">
         <input type="text" id="task_input" placeholder="Input new task">
         <button type="button" id="add_task_btn">Add Task</button>
     </form>
-    <ul id = "tasks_body">
-        
+    <ul id="tasks_body">
+
     </ul>
-    
+
 
     <div id="setting_form">
         <span id="hiden_id"></span>
-        <button id="delete_task_btn">Delete Task</button>
-        <button id="edit_task_btn">Edit Task</button>
-        <button id="complete_task_btn">Complete Task</button>
+        <div id="add_sub_task">
+            <input type="text" id="sub_task_input" placeholder="Input sub task">
+            <button type="button" id="add_sub_task_btn">Add Sub Task</button>
+        </div>
+        <div id="settings_buttons">
+            <button id="delete_task_btn">Delete Task</button>
+            <button id="edit_task_btn">Edit Task</button>
+            <button id="complete_task_btn">Complete Task</button>
+            <button id="close_setting_btn">Close</button>
+
+        </div>
+
     </div>
-    <div id ="black_background"></div>
+    <div id="black_background"></div>
 
 </body>
+
 </html>
